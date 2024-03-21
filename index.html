@@ -1,0 +1,467 @@
+<html>
+<canvas id="Snake Game" width="1500" height="750"></canvas>
+<script src="Box.js"></script>
+<script src="Snake.js"></script>
+<script src="snake_food.js"></script>
+<script src="Snake_2.js"></script>
+<script src="game_menu.js"></script>
+<script>
+    var g_Canvas = document.getElementById("Snake Game");
+    var g_Context = g_Canvas.getContext("2d");
+    var g_FrameRate = 30;
+    var g_TimeInterval = 1000 / g_FrameRate;
+    
+    
+    
+    var g_count_point_2 = 0;
+    var g_count_point = 0;
+    
+        var g_Home_Screen=new c_Home_Screen(600,300,610,370,615,440);
+       
+       
+        var g_Instruction_Screen=new c_Instruction_Screen(10,20)
+        var g_Game_End_Screen= new c_Game_End_Screen(550,500,720,500)
+        
+        var g_Home_Screen_Active_Flag=1;
+        var g_Istruction_Screen_Active_Flag=0;
+        var g_Game_End_Screen_Active_Flag=0;
+        var g_restart=0;
+        var g_home=0;
+        var g_Single_Player_Game_Flag = 0;
+        var g_Multi_Player_Game_Flag = 0;
+        var mouseX =0;
+        var mouseY =0;
+        var start_M=0;
+        var start_S=0;
+    
+    
+    var g_Snake_Food = new c_snake_food(g_Snake_Food_Xpos, g_Snake_Food_Ypos, "#000000");
+    
+    var g_Snake_Food_Xpos = parseInt(Math.random() * (g_Canvas.width - g_Snake_Food.Snake_Food_Size) + g_Snake_Food.Snake_Food_Size);
+    var g_Snake_Food_Ypos = parseInt(Math.random() * (g_Canvas.height - g_Snake_Food.Snake_Food_Size) + g_Snake_Food.Snake_Food_Size);
+   
+    var g_visible_Flag = 0;
+    var g_Food_Visible_Time = 0;
+    var g_Visible_Time_Limit = 5; 
+    var g_NotVisible_Time_Limit = 8;
+    var g_Frame_Count = 0;
+    var g_Random_Snake_Change = 0;
+    var g_Snake = new c_Snake(750, 100, 50, 7, "#b54d4d");
+    g_Snake.m_Initial_Snake_Creation(g_Canvas);
+    var g_Snake_2 = new c_Snake_2(250, 600, 50, 7, "#3cd7eb");
+    g_Snake_2.m_Initial_Snake_Creation_2(g_Canvas);
+
+    function f_Game_End() 
+    {
+        if (g_Snake_2.Stop_Movement_Flag_2 == 0) 
+        {
+            g_Multi_Player_Game_Flag=0;
+            g_Game_End_Screen_Active_Flag=1;
+        }
+         if(g_Snake.Stop_Movement_Flag == 0) 
+             {
+                 
+                 g_Game_End_Screen_Active_Flag=1;
+                 g_Single_Player_Game_Flag=0;
+                 console.log("g_Single_Player_Game_Flag= "+g_Single_Player_Game_Flag)
+             }
+    }
+    function f_Game_Run()
+    {
+        if(g_restart==1)
+            {
+                g_Game_End_Screen_Active_Flag=0;
+                if(start_S==1 || start_M==1)
+                    {
+                        
+                        var Snake1_xpos=300;
+                        var Snake1_Temp_xpos1=300;
+                        for(var i=0;i<g_Snake.Passive_Length_Of_Snake;i++)
+                            {
+                                g_Snake.Snake_Body_Array[i].Xpos=Snake1_xpos;
+                                Snake1_xpos-=g_Snake.Snake_Body_Size;
+                                g_Snake.Snake_Body_Array[i].Ypos=100;
+                                 console.log("xpos= "+g_Snake.Snake_Body_Array[i].Xpos)
+                            }
+                    
+                        g_Snake.Active_Length_Of_Snake=7;
+                        for(j = 0 ; j <= g_Snake.Temp_Pos_Array_Len ;j++)
+				        {
+					   
+                              g_Snake.Temp_XPos_Array[this.j] = Snake1_Temp_xpos1--;
+                              g_Snake.Temp_YPos_Array[this.j] = 100;
+					 
+				        }
+                        g_Single_Player_Game_Flag=1;
+                        g_Snake.Stop_Movement_Flag=1;
+                        g_restart=0;
+                    }
+                if(start_M==1)
+                    {
+                        
+                        var Snake2_xpos=750;
+                        var Snake2_Temp_xpos1=750;
+                        for(var i=0;i<g_Snake_2.Passive_Length_Of_Snake_2;i++)
+                            {
+                                g_Snake_2.Snake_Body_Array_2[i].Xpos=Snake2_xpos;
+                                Snake2_xpos-=g_Snake_2.Snake_Body_Size_2;
+                                g_Snake_2.Snake_Body_Array_2[i].Ypos=500;
+                                 
+                            }
+                    
+                        
+                        for(j = 0 ; j <= g_Snake_2.Temp_Pos_Array_Len_2 ;j++)
+				        {
+					   
+                              g_Snake_2.Temp_XPos_Array_2[this.j] = Snake2_Temp_xpos1--;
+                              g_Snake_2.Temp_YPos_Array_2[this.j] = 500;
+					 
+				        }
+                        g_Multi_Player_Game_Flag=1;
+                        g_Snake_2.Stop_Movement_Flag_2=1;
+                    }
+            }
+        
+        if(g_home==1)
+            {
+                        Snake1_xpos=300;
+                        Snake1_Temp_xpos1=300;
+                        for( i = 0 ; i < g_Snake.Passive_Length_Of_Snake ; i++)
+                            {
+                                g_Snake.Snake_Body_Array[i].Xpos=Snake1_xpos;
+                                Snake1_xpos-=g_Snake.Snake_Body_Size;
+                                g_Snake.Snake_Body_Array[i].Ypos=100;
+                                 console.log("xpos= "+g_Snake.Snake_Body_Array[i].Xpos)
+                            }
+                    
+                        g_Snake.Active_Length_Of_Snake=7;
+                        for(j = 0 ; j <= g_Snake.Temp_Pos_Array_Len ;j++)
+				        {
+					   
+                              g_Snake.Temp_XPos_Array[this.j] = Snake1_Temp_xpos1--;
+                              g_Snake.Temp_YPos_Array[this.j] = 100;
+					 
+				        }
+                        g_Snake.Stop_Movement_Flag=1;
+                        Snake2_xpos=750;
+                        Snake2_Temp_xpos1=750;
+                        for(var i=0 ; i < g_Snake_2.Passive_Length_Of_Snake_2 ; i++)
+                            {
+                                g_Snake_2.Snake_Body_Array_2[i].Xpos=Snake2_xpos;
+                                Snake2_xpos-=g_Snake_2.Snake_Body_Size_2;
+                                g_Snake_2.Snake_Body_Array_2[i].Ypos=500;
+                                 
+                            }
+                    
+                        
+                        for(j = 0 ; j <= g_Snake_2.Temp_Pos_Array_Len_2 ;j++)
+				        {
+					   
+                              g_Snake_2.Temp_XPos_Array_2[this.j] = Snake2_Temp_xpos1--;
+                              g_Snake_2.Temp_YPos_Array_2[this.j] = 500;
+					 
+				        }
+                        g_Snake_2.Stop_Movement_Flag_2=1;
+                g_home=0;
+            }
+        
+    }
+
+    function f_Snake_Food_Appear_And_Snake_food_Collision() {
+        if ((g_Snake_2.Snake_Body_Array_2[0].Xpos + g_Snake_2.Snake_Body_Size_2) >= g_Snake_Food.Snake_Food_Xpos && g_Snake_2.Snake_Body_Array_2[0].Xpos <= g_Snake_Food.Snake_Food_Xpos + g_Snake_Food.Snake_Food_Size && g_Snake_2.Snake_Body_Array_2[0].Ypos + g_Snake_2.Snake_Body_Size_2 >= g_Snake_Food.Snake_Food_Ypos && g_Snake_2.Snake_Body_Array_2[0].Ypos <= g_Snake_Food.Snake_Food_Ypos + g_Snake_Food.Snake_Food_Size) {
+            g_count_point_2++;
+            g_Random_Snake_Change = parseInt(Math.random() * (3 - 1) + 1);
+            if (g_Random_Snake_Change == 1) {
+                g_Snake_2.MoveSpeed_2 = parseInt(Math.random() * (40 - 5) + 5);
+            }
+            if (g_Random_Snake_Change == 2) {
+                g_Snake_2.Active_Length_Of_Snake_2 = parseInt(Math.random() * (50 - 1) + 1);
+            }
+            if (g_Random_Snake_Change == 3) {
+                g_Snake_2.Snake_Body_Size_2 = parseInt(Math.random() * (90 - 30) + 30);
+            }
+            g_Snake_Food.Snake_Food_Xpos = parseInt(Math.random() * (g_Canvas.width - g_Snake_Food.Snake_Food_Size) + g_Snake_Food.Snake_Food_Size);
+            g_Snake_Food.Snake_Food_Ypos = parseInt(Math.random() * (g_Canvas.height - g_Snake_Food.Snake_Food_Size) + g_Snake_Food.Snake_Food_Size);
+            g_Food_Visible_Time = 0;
+            
+        }
+        
+        
+        
+        
+        if (g_Snake.Snake_Body_Array[0].Xpos + g_Snake.Snake_Body_Size >= g_Snake_Food.Snake_Food_Xpos && g_Snake.Snake_Body_Array[0].Xpos <= g_Snake_Food.Snake_Food_Xpos + g_Snake_Food.Snake_Food_Size && g_Snake.Snake_Body_Array[0].Ypos + g_Snake.Snake_Body_Size >= g_Snake_Food.Snake_Food_Ypos && g_Snake.Snake_Body_Array[0].Ypos <= g_Snake_Food.Snake_Food_Ypos + g_Snake_Food.Snake_Food_Size) {
+            g_count_point++;
+            g_Random_Snake_Change = parseInt(Math.random() * (3 - 1) + 1);
+            if (g_Random_Snake_Change == 1) {
+                g_Snake.MoveSpeed = parseInt(Math.random() * (40 - 5) + 5);
+            }
+            if (g_Random_Snake_Change == 2) {
+                g_Snake.Active_Length_Of_Snake = parseInt(Math.random() * (50 - 1) + 1);
+            }
+            if (g_Random_Snake_Change == 3) {
+                g_Snake.Snake_Body_Size = parseInt(Math.random() * (90 - 30) + 30);
+            }
+            g_Snake_Food.Snake_Food_Xpos = parseInt(Math.random() * (g_Canvas.width - g_Snake_Food.Snake_Food_Size) + g_Snake_Food.Snake_Food_Size);
+            g_Snake_Food.Snake_Food_Ypos = parseInt(Math.random() * (g_Canvas.height - g_Snake_Food.Snake_Food_Size) + g_Snake_Food.Snake_Food_Size);
+            g_Food_Visible_Time = 0;
+            
+        }
+     
+        
+        g_Frame_Count++;
+        if (g_Frame_Count == 30) {
+            g_Food_Visible_Time++;
+            g_Frame_Count = 0;
+        }
+        if (g_Food_Visible_Time <= g_Visible_Time_Limit) {
+            g_visible_Flag = 1;
+        }
+        else if (g_Food_Visible_Time >= g_Visible_Time_Limit && g_Food_Visible_Time <= g_NotVisible_Time_Limit) {
+            g_Snake_Food.Snake_Food_Xpos = parseInt(Math.random() * (g_Canvas.width - g_Snake_Food.Snake_Food_Size) + g_Snake_Food.Snake_Food_Size);
+            g_Snake_Food.Snake_Food_Ypos = parseInt(Math.random() * (g_Canvas.height - g_Snake_Food.Snake_Food_Size) + g_Snake_Food.Snake_Food_Size);
+            g_visible_Flag = 0;
+            g_Food_Visible_Time++;
+        }
+        else {
+            g_Food_Visible_Time = 0;
+        }
+    }
+
+    function f_Clear_Screen() {
+        g_Context.clearRect(0, 0, g_Canvas.width, g_Canvas.height);
+        g_Context.fillStyle = "#f0c2c2";
+        g_Context.fillRect(0, 0, g_Canvas.width, g_Canvas.height);
+        g_Context.strokeRect(0, 0, g_Canvas.width, g_Canvas.height);
+    }
+
+    function f_draw_Snake_Food() {
+        if (g_visible_Flag == 1) {
+            g_Snake_Food.m_Draw_Snake_Food(g_Context);
+        }
+    }
+    
+    
+    function f_Draw_Score_Of_Two_Snake() {
+        if (g_Single_Player_Game_Flag == 1 || g_Multi_Player_Game_Flag == 1) {
+            g_Context.fillStyle = "#000000";
+            g_Context.font = "40px Arial";
+            g_Context.fillText(" Player 1: " + g_count_point, 20, 60);
+        }
+        if (g_Multi_Player_Game_Flag == 1) {
+            g_Context.fillStyle = "#000000";
+            g_Context.font = "40px Arial";
+            g_Context.fillText(" Player 2: " + g_count_point_2, 1250, 60);
+        }
+    }
+
+    function f_Draw_Game_End_Score() {
+        g_Context.fillStyle = "#000000";
+        g_Context.font = "40px Arial";
+        
+        if (g_Single_Player_Game_Flag == 1 && g_Game_End_Screen_Active_Flag == 1) 
+        {
+            g_Context.fillText(" Player 1: " + g_count_point, 650, 300);
+            
+        
+        }
+        if (g_Multi_Player_Game_Flag == 1 && g_Game_End_Screen_Active_Flag == 1) {
+            g_Context.fillText(" Player 1: " + g_count_point, 650, 300);
+            g_Context.fillText(" Player 2: " + g_count_point_2, 650, 350);
+            if (g_count_point > g_count_point_2) {
+                g_Context.fillText(" Player 1 Win's ", 650, 400);
+            }
+            else if (g_count_point_2 > g_count_point) {
+                g_Context.fillText(" Player 2 Win's ", 650, 400);
+            }
+            else {
+                g_Context.fillText(" Draw ", 650, 400);
+            }
+        }
+    }
+
+    function f_OnKeyPress(press) {
+        if (press.keyCode == 37) {
+            g_Snake.LeftArrow = 1;
+        }
+        if (press.keyCode == 39) {
+            g_Snake.RightArrow = 1;
+        }
+        if (press.keyCode == 38) {
+            g_Snake.UpArrow = 1;
+        }
+        if (press.keyCode == 40) {
+            g_Snake.DownArrow = 1;
+        }
+        if (press.keyCode == 78) {
+            g_Single_Player_Game = 1;
+        }
+        if (press.keyCode == 77) {
+            g_Multi_Player_Game = 1;
+        }
+        if (press.keyCode == 87) {
+            g_Snake_2.UpArrow_2 = 1;
+        }
+        if (press.keyCode == 83) {
+            g_Snake_2.DownArrow_2 = 1;
+        }
+        if (press.keyCode == 65) {
+            g_Snake_2.LeftArrow_2 = 1;
+        }
+        if (press.keyCode == 68) {
+            g_Snake_2.RightArrow_2 = 1;
+        }
+       
+    }
+
+    function f_OnKeyRelease(release) {
+        if (release.keyCode == 37) {
+            g_Snake.LeftArrow = 0;
+        }
+        if (release.keyCode == 39) {
+            g_Snake.RightArrow = 0;
+        }
+        if (release.keyCode == 38) {
+            g_Snake.UpArrow = 0;
+        }
+        if (release.keyCode == 40) {
+            g_Snake.DownArrow = 0;
+        }
+        if (release.keyCode == 87) {
+            g_Snake_2.UpArrow_2 = 0;
+        }
+        if (release.keyCode == 83) {
+            g_Snake_2.DownArrow_2 = 0;
+        }
+        if (release.keyCode == 65) {
+            g_Snake_2.LeftArrow_2 = 0;
+        }
+        if (release.keyCode == 68) {
+            g_Snake_2.RightArrow_2 = 0;
+        }
+        
+    }
+    
+    function f_onMouseDown(l_event)
+        {
+            mouseX = l_event.clientX - g_Canvas.getBoundingClientRect().left;
+            mouseY = l_event.clientY - g_Canvas.getBoundingClientRect().top;
+			
+			if (mouseX >= g_Home_Screen.Instruction_Button_Xpos && mouseX <= (g_Home_Screen.Instruction_Button_Xpos + g_Home_Screen.Instruction_Button_Width ) && mouseY >= g_Home_Screen.Instruction_Button_Ypos  && mouseY <= (g_Home_Screen.Instruction_Button_Ypos+ g_Home_Screen.Instruction_Button_Height)) 
+				{
+                    g_Home_Screen_Active_Flag=0;
+					g_Istruction_Screen_Active_Flag=1;
+					
+				}
+			if (mouseX >= g_Instruction_Screen.Close_Button_Xpos && mouseX <= (g_Instruction_Screen.Close_Button_Xpos + g_Instruction_Screen.Close_Button_Width) && mouseY >= g_Instruction_Screen.Close_Button_Ypos && mouseY <= (g_Instruction_Screen.Close_Button_Ypos + g_Instruction_Screen.Close_Button_Height))
+				{
+					g_Istruction_Screen_Active_Flag=0;
+					g_Home_Screen_Active_Flag=1;
+				}
+			if (mouseX >= g_Home_Screen.Start_Single_player_Button_Xpos && mouseX <= (g_Home_Screen.Start_Single_player_Button_Xpos + g_Home_Screen.Start_Single_player_Button_Width) && mouseY >= g_Home_Screen.Start_Single_player_Button_Ypos  && mouseY <= (g_Home_Screen.Start_Single_player_Button_Ypos + g_Home_Screen.Start_Single_player_Button_Height )) 
+				{
+					
+					g_Home_Screen_Active_Flag=0;
+                   g_Single_Player_Game_Flag = 1;
+                	start_S=1;
+                    console.log
+				}
+            if (mouseX >= g_Home_Screen.Start_Multi_player_Button_Xpos && mouseX <= (g_Home_Screen.Start_Multi_player_Button_Xpos + g_Home_Screen.Start_Multi_player_Button_Width ) && mouseY >= g_Home_Screen.Start_Multi_player_Button_Ypos  && mouseY <= (g_Home_Screen.Start_Multi_player_Button_Ypos + g_Home_Screen.Start_Multi_player_Button_Height )) 
+				{
+					
+					g_Home_Screen_Active_Flag=0;
+                   g_Multi_Player_Game_Flag = 1;
+                	start_M=1;
+				}
+			if (mouseX >= g_Game_End_Screen.Home_Button_Xpos && mouseX <= (g_Game_End_Screen.Home_Button_Xpos + g_Game_End_Screen.Home_Button_Width) && mouseY >= g_Game_End_Screen.Home_Button_Ypos && mouseY <= (g_Game_End_Screen.Home_Button_Ypos+ g_Game_End_Screen.Home_Button_Height))
+				{
+                    
+                    console.log(g_home);
+                    g_Single_Player_Game_Flag = 0;
+                    g_Multi_Player_Game_Flag = 0;
+                    //g_Snake_2.Stop_Movement_Flag_2=1;
+                    //g_Snake.Stop_Movement_Flag=1;
+                    g_Game_End_Screen_Active_Flag=0;
+					g_Home_Screen_Active_Flag=1;
+                    g_home=1;
+					start_S=0;
+                    start_M=0;
+				}
+            if (mouseX >= g_Game_End_Screen.Restart_Button_Xpos && mouseX <= (g_Game_End_Screen.Restart_Button_Xpos + g_Game_End_Screen.Restart_Button_Width) && mouseY >= g_Game_End_Screen.Restart_Button_Ypos && mouseY <= (g_Game_End_Screen.Restart_Button_Ypos+ g_Game_End_Screen.Restart_Button_Height))
+				{
+                    g_count_point=0;
+                    g_count_point_2=0;
+                    g_Game_End_Screen_Active_Flag=0;
+					g_restart=1;
+					console.log(g_restart+" =g_restart");
+                    
+				}
+            
+        }
+    
+    
+    
+    
+    
+
+    function f_GameLoop() 
+    {
+        
+            
+        
+            if (g_Single_Player_Game_Flag == 1 || g_Multi_Player_Game_Flag == 1) 
+            {
+                g_Snake.m_Snake_Movement();
+                g_Snake.m_snake_wall_collision(g_Canvas);
+                f_Snake_Food_Appear_And_Snake_food_Collision();
+            }
+            if (g_Multi_Player_Game_Flag == 1) {
+                g_Snake_2.m_Snake_Movement_2();
+                g_Snake_2.m_snake_wall_collision_2(g_Canvas);
+            }
+        f_Game_Run();
+        f_Game_End();
+        
+        f_Clear_Screen();
+            if(g_Game_End_Screen_Active_Flag==0)
+                {
+                    if (g_Single_Player_Game_Flag == 1 || g_Multi_Player_Game_Flag == 1) 
+                    {
+                        f_draw_Snake_Food();
+                        g_Snake.m_Draw_Snake(g_Context);
+                        f_Draw_Score_Of_Two_Snake();
+                    }
+                    if (g_Multi_Player_Game_Flag == 1) 
+                    {
+                        g_Snake_2.m_Draw_Snake_2(g_Context);
+                    }
+                }
+        
+            
+        
+            if (g_Game_End_Screen_Active_Flag==1) {
+                f_Draw_Game_End_Score();
+            }
+        
+        
+        
+         if(g_Home_Screen_Active_Flag==1)
+                {
+                    g_Home_Screen.m_Draw_Home_Screen(g_Context);
+                }
+        if(g_Istruction_Screen_Active_Flag==1)
+                {
+                    g_Instruction_Screen.m_Draw_Instruction_Screen(g_Context)
+                }
+        if(g_Game_End_Screen_Active_Flag==1)
+                {
+                    g_Game_End_Screen.m_Draw_Game_End_Screen(g_Context)
+                }
+    }
+     
+    window.addEventListener('mousedown', f_onMouseDown);
+    window.addEventListener("keydown", f_OnKeyPress);
+    window.addEventListener("keyup", f_OnKeyRelease);
+    setInterval(f_GameLoop, g_TimeInterval);
+</script>
+
+</html>
